@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: abf0f84554258634483a0901d9bbd044
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - GreenCubeSprite: {instanceID: 0}
+  - YellowCubeSprite: {instanceID: 0}
+  - BlueCubeSprite: {instanceID: 0}
+  - RedCubeSprite: {instanceID: 0}
+  - PinkCubeSprite: {instanceID: 0}
+  - PurpleCubeSprite: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
