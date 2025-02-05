@@ -12,6 +12,9 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
     [SerializeField] private GameGrid grid;
     private List<int> matchCounts;
     private bool Shuffled = false;
+
+    private Vector2 AnimCenter = new Vector3(0,0,0);
+    private float AnimTime = 0.5f;
     void Start()
     {
         matchCounts = new List<int>();
@@ -48,6 +51,8 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
         
     }
 
+
+
     public void ResetMatchCounts()
     {
         matchCounts.Clear();
@@ -63,6 +68,8 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
 
 
     }
+
+
         private List<Item> CollectAllItems()
     {
         List<Item> items = new List<Item>();
@@ -92,12 +99,32 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
                 // Item'ı hücreye yerleştir
                 Item item = items[index++];
                 grid.Cells[x, y].item = item;
-                item.transform.position = grid.Cells[x, y].transform.position;
+                //item.transform.position = grid.Cells[x, y].transform.position;
+                StartCoroutine(ShuffleAnimation(item,item.transform.position,AnimCenter,grid.Cells[x, y].transform.position,AnimTime));
 
                 item.UpdateSortingOrder(y);
+
                 
             }
         }
+    }
+
+    private IEnumerator ShuffleAnimation(Item item, Vector3 start, Vector2 Center, Vector3 target, float duration)
+    {
+        yield return StartCoroutine(MoveItemToPosition(item, start, Center, duration));
+        yield return StartCoroutine(MoveItemToPosition(item, Center, target, duration));
+    }
+    
+    private IEnumerator MoveItemToPosition(Item item, Vector3 start, Vector3 target, float duration)
+    {
+        float elapsedTime = 0f;
+        while (elapsedTime < duration)
+        {
+            item.transform.position = Vector3.Lerp(start, target, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        item.transform.position = target;
     }
 
 }
