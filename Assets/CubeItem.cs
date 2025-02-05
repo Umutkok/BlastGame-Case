@@ -1,20 +1,15 @@
 using UnityEngine;
 
-/// <summary>
-/// 
-/// CubeItem is a class that represents a cube item in the game. It inherits from the Item class.
-/// 
-/// </summary>
-/*public class CubeItem : Item
+/*
+public class CubeItem : Item
 {
     private MatchType matchType;
     
-    public void PrepareCubeItem(ItemBase itemBase,MatchType matchType)
+    public void PrepareCubeItem(ItemPrefab ItemPrefab,MatchType matchType)
     {
         //SoundID = SoundID.Cube;
         this.matchType = matchType;
-        itemBase.Clickable = true;
-        Prepare(itemBase, GetSpritesForMatchType());
+        Prepare(ItemPrefab, GetSpritesForMatchType());
     }
     private Sprite GetSpritesForMatchType()
     {
@@ -147,8 +142,7 @@ using UnityEngine;
     
     public override void TryExecute()
     {
-        //ParticleManager.Instance.PlayParticle(this);
-        //AudioManager.Instance.PlayEffect(SoundID);
+
         base.TryExecute();
     }
 }*/

@@ -1,17 +1,23 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
 public class Cell : MonoBehaviour
 {
-    public TextMesh labelText;
 
     [HideInInspector] public int X;
     [HideInInspector] public int Y;
 
     public Item _item;
     public GameGrid gameGrid { get; private set; }
+    WaitForSeconds waitTime = new WaitForSeconds(2f);
+
+    public void Start()
+    {
+
+    }
 
     private void OnMouseDown()
     {
@@ -41,7 +47,7 @@ public class Cell : MonoBehaviour
 
     private IEnumerator FillGrid()//gridin dolmasını bekle
     {
-        yield return new WaitForSeconds(2f);
+        yield return waitTime;
         SmurtShuffle.Instance.ResetMatchCounts();
         SmurtShuffle.Instance.LookInt();
     }
