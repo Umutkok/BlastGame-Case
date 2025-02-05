@@ -8,6 +8,10 @@ using Random = UnityEngine.Random;
 
 public class NewItem : Singleton<NewItem>
 {
+    /*Bu class yeni item spawnlamamız için son satırı kontrol ediyor eğer null dönerse
+    sırasıyla satırın ait olduğu kolona rastgele item spawnlıyor*/
+
+
     public GameGrid grid;
     ItemType[] itemTypes = (ItemType[])System.Enum.GetValues(typeof(ItemType));
     public Cell[,] Cells { get; private set; }

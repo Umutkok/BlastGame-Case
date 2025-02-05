@@ -84,7 +84,6 @@ public class Cell : MonoBehaviour
         X = x;
         Y = y;
         transform.localPosition = new Vector3 (x, y);
-        
     }
 
 
