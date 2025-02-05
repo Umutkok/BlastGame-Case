@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class SmurtShuffle : Singleton<SmurtShuffle>
 {
+    
+    /*Shuffle yapması griddeki cell sayısı ile gridde ki komşusu olmayan item sayısı eşit olmalı
+    bu sayede grid üzerinde hamle yapamıyacağımızı anlamış oluyoruz ve shuffle fonksiyonunu çalıştırıyoruz */
+
+
     [SerializeField] private GameGrid grid;
     private List<int> matchCounts;
     private bool Shuffled = false;
@@ -11,7 +16,6 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
     {
         matchCounts = new List<int>();
     }
-
     public void LookInt()
     {
         var visitedCells = new List<Cell>();

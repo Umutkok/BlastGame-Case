@@ -1,12 +1,5 @@
 using UnityEngine;
 
-
-/// <summary>
-/// 
-/// The Board class represents the game board in a grid-based game.
-/// It is responsible for managing the cells of the game board, including their initialization and preparation.
-/// 
-/// </summary>
 public class GameGrid : MonoBehaviour
 {
     public Transform cellsParent;
@@ -34,9 +27,6 @@ public class GameGrid : MonoBehaviour
 
     private void LoadLevelInfo()
     {
-        //int currentLevel = PlayerPrefs.GetInt("Level", 1);
-        //levelInfo = LevelManager.getLevelInfo(currentLevel);
-
         Rows = levelInfo.grid_height;
         Cols = levelInfo.grid_width;
     }

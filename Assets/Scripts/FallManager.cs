@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class FallManager : Singleton<FallManager>
 {
+
+    /*Fall manager grid üzerinde arama yapar ve eğer altı boş olan bir cell var ise ait olduğu hücrede ki item i alt hücreye taşır*/
     public GameGrid grid;
 
     private void Start()

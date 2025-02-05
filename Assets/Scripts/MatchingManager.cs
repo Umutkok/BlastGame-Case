@@ -3,10 +3,14 @@ using UnityEngine;
 
 public class MatchingManager : MonoBehaviour
 {
-    public static MatchingManager Instance;
     
-    [SerializeField] private GameGrid board; // GameGrid referansını Inspector'dan ata
 
+    /*Matching Manager komşu itemlerin bulunduğu cell lerin komşularını bulmamız için BFS algoritmasını kullanır
+    Bu class SmartShuffle, FallManager, IconManager gibi mekaniklerde gridin durumu hakkında bilgi sahibi olmamızı sağlıyacak*/
+
+
+    public static MatchingManager Instance;
+    [SerializeField] private GameGrid board; // GameGrid referansını Inspector'dan ata
     private List<int> matchCounts; // Eşleşme boyutlarını saklayacak liste
 
     private void Awake()
