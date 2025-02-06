@@ -7,11 +7,19 @@ using UnityEngine;
 public class SmurtShuffle : Singleton<SmurtShuffle>
 {
     
-    /*Shuffle yapması griddeki cell sayısı ile gridde ki komşusu olmayan item sayısı eşit olmalı matchCounts ile bunu ölçüyoruz
-    bu sayede grid üzerinde hamle yapamayacağımızı anlamış oluyoruz ve shuffle fonksiyonunu çalıştırıyoruz
-    daha sonra tahtadaki tüm cell leri temizliyoruz ve groupedItems Dictionary sinde matchType larına göre listeliyoruz
-    en uzun 3 listeyi rastgele cell noktalarında başlatıp komşularını BFS ile bulup spawnlatıyoruz
-    kalan itemleri ise rastgele boş kalan cell lere yerleştiriyoruz bu sayede kesin olarak eşleşme sağlarken bu eşleşmenin oranını da kontrol edebiliyoruz
+      /*Shuffle yapması griddeki toplam cell sayısı ile gridde ki komşusu olmayan item sayısı eşit olmalı matchCounts ile bunu ölçüyoruz.
+    Bu sayede grid üzerinde hamle yapamayacağımızı anlamış oluyoruz ve shuffle fonksiyonunu çalıştırıyoruz. Daha sonra gridde ki tüm cell
+    leri temizliyoruz ve groupedItems Dictionary sinde matchType larına göre listeliyoruz.
+
+      En uzun 3 listeyi reducedTopThree içindeki varsa 3 listeyi de rastgele cell noktalarında başlatıp komşuların listedeki elemanlarını
+    BFS ile bulup yerleştiriyoruz. Kalan itemleri ise rastgele boş kalan cell lere yerleştiriyoruz bu sayede kesin olarak eşleşme sağlarken
+    bu eşleşmenin oranını da kontrol edebiliyoruz
+    
+      Eğer reducedTopThree 4 den az ise tüm listeyi kullanıyoruz. Bunun sebebi az taş olan durumlarda mesela aynı taştan en fazla 2 adet
+    varsa ve azaltma yaparsak en uzun listelerim tek itemden oluşur.
+
+      4 den fazla ise yüzde 75 lik kısımı alıp kalanları finalCombinedRemaining ile birleştiriyoruz daha zor bir level için dağıtılacak
+    kesin şeker sayısının yüzdesi düşürülebilir.
 
     */
 

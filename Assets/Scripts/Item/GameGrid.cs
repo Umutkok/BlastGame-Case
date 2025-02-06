@@ -16,8 +16,6 @@ public class GameGrid : MonoBehaviour
 
     public Vector3 Center;
 
-
-
     public static GameGrid Instance;
     private void Awake()
     {

@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
+    // Item oyundaki şekerlerimizin ana unsuru diğer script ler ile beraber çalışarak itemlerin spritelarının doğru bir şekilde oluşturuyor.
+    // Eğer bulunduğu cell input alırsa kendisini destroylayıp fallManager,NewItem,IconManager ı tetikliyor.
+    // Bu sayede oyunda eğer herhangi bir item yok olursa grid mekaniklerini devreye sokmuş oluyoruz.
+
+
+
     public ItemType ItemType;
     private Cell cell;
     private MatchType matchType;
