@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class SmurtShuffle : Singleton<SmurtShuffle>
+public class SmartShuffle : Singleton<SmartShuffle>
 {
     
       /*Shuffle yapması griddeki toplam cell sayısı ile gridde ki komşusu olmayan item sayısı eşit olmalı matchCounts ile bunu ölçüyoruz.
@@ -26,7 +26,7 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
 
     [SerializeField] private GameGrid grid;
     private List<int> matchCounts;
-    public bool shuffling = false;
+    [HideInInspector]public bool shuffling = false;
 
     private Vector2 AnimCenter = new Vector3(0,0,0);
     private float AnimTime = 0.2f;

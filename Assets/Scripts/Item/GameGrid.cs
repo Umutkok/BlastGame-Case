@@ -14,8 +14,6 @@ public class GameGrid : MonoBehaviour
 
     public Cell[,] Cells { get; private set; }
 
-    public Vector3 Center;
-
     public static GameGrid Instance;
     private void Awake()
     {
@@ -23,8 +21,7 @@ public class GameGrid : MonoBehaviour
         LoadLevelInfo();
         InitializeCells();
         PrepareCells();
-        Center = new Vector3((float)levelSO.grid_height/2, (float)levelSO.grid_width/2, 0);
-        
+  
     }
 
     private void LoadLevelInfo()

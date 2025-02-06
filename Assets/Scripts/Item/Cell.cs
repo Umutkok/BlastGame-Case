@@ -17,7 +17,7 @@ public class Cell : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (item == null || item.GetMatchType() == MatchType.None || SmurtShuffle.Instance.shuffling ==true) return; //shuffle halinde ise veya null ise return
+        if (item == null || item.GetMatchType() == MatchType.None || SmartShuffle.Instance.shuffling ==true) return; //shuffle halinde ise veya null ise return
 
         var matchedCells = MatchingManager.Instance.FindMatches(this, item.GetMatchType());
 
@@ -47,8 +47,8 @@ public class Cell : MonoBehaviour
     private IEnumerator FillGrid()//gridin dolmasını bekle
     {
         yield return new WaitForSeconds(2f);
-        SmurtShuffle.Instance.ResetMatchCounts();
-        SmurtShuffle.Instance.LookInt();
+        SmartShuffle.Instance.ResetMatchCounts();
+        SmartShuffle.Instance.LookInt();
     }
 
 
