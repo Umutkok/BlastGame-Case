@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SpriteHolder : Singleton<SpriteHolder>
+// spriteları depolayan ve gerektiğinde kullanmamızı sağlayan script
 {
     [Header("Red")]
     public Sprite RedCubeSprite;

@@ -7,8 +7,13 @@ using UnityEngine;
 public class SmurtShuffle : Singleton<SmurtShuffle>
 {
     
-    /*Shuffle yapması griddeki cell sayısı ile gridde ki komşusu olmayan item sayısı eşit olmalı
-    bu sayede grid üzerinde hamle yapamıyacağımızı anlamış oluyoruz ve shuffle fonksiyonunu çalıştırıyoruz */
+    /*Shuffle yapması griddeki cell sayısı ile gridde ki komşusu olmayan item sayısı eşit olmalı matchCounts ile bunu ölçüyoruz
+    bu sayede grid üzerinde hamle yapamayacağımızı anlamış oluyoruz ve shuffle fonksiyonunu çalıştırıyoruz
+    daha sonra tahtadaki tüm cell leri temizliyoruz ve groupedItems Dictionary sinde matchType larına göre listeliyoruz
+    en uzun 3 listeyi rastgele cell noktalarında başlatıp komşularını BFS ile bulup spawnlatıyoruz
+    kalan itemleri ise rastgele boş kalan cell lere yerleştiriyoruz bu sayede kesin olarak eşleşme sağlarken bu eşleşmenin oranını da kontrol edebiliyoruz
+
+    */
 
 
     [SerializeField] private GameGrid grid;
@@ -44,7 +49,7 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
             }
         }
         
-        if(matchCounts.Count == 9 && Shuffled == false) // grid boyutu ile eşit olursa
+        if(matchCounts.Count == grid.Rows*grid.Cols && Shuffled == false) // grid boyutu ile eşit olursa
         {
             Shuffled = true;
             Shuffle();
@@ -173,32 +178,6 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
     }
 
 
-    /*private List<Item> CollectAllItems()
-    {
-        List<Item> items = new List<Item>();
-        for (int y = 0; y < grid.Rows; y++)
-        {
-            for (int x = 0; x < grid.Cols; x++)
-            {
-                if (grid.Cells[x, y].item != null)
-                {
-                    items.Add(grid.Cells[x, y].item);
-                    grid.Cells[x, y].item = null; // Hücreyi boşalt
-                }
-            }
-        }
-        return items;
-    }*/
-
-
-
-
-/// <summary>
-/// 
-/// </summary>
-
-
-
 
  // matchtype a göre listeler yap 
     private Dictionary<MatchType, List<Item>> CollectAndGroupItems()
@@ -255,7 +234,7 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
 
     private (List<List<Item>> reducedTopThree, List<Item> finalCombinedRemaining) ProcessItemsWithReduction()
     {
-        // 1. Önceki adımdaki gruplandırma ve sıralamayı yap
+        //gruplandırma ve sıralaması yap
         var groupedItems = CollectAndGroupItems();
         var orderedGroups = groupedItems.Values
                                         .OrderByDescending(list => list.Count)
@@ -265,7 +244,7 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
                                                     .SelectMany(list => list)
                                                     .ToList();
 
-        // 2. Her bir topThree listesini %75-%25 böl
+        // Her bir topThree listesini %75-%25 böl
         List<List<Item>> reducedTopThree = new List<List<Item>>();
         List<Item> allTwentyFivePercent = new List<Item>();
 
@@ -281,7 +260,7 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
             allTwentyFivePercent.AddRange(twentyFiveList);
         }
 
-        // 3. Kalan %25'leri combinedRemaining ile birleştir
+        //Kalanları combinedRemaining ile birleştir
         List<Item> finalCombinedRemaining = combinedRemaining
                                             .Concat(allTwentyFivePercent)
                                             .ToList();
@@ -290,38 +269,6 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
     }
 
 
-
-
-
-
-/// <summary>
-/// 
-/// </summary>
-
-
-
-    /*private void RedistributeItems(List<Item> items)
-    {
-        int index = 0;
-        for (int y = 0; y < grid.Rows; y++)
-        {
-            for (int x = 0; x < grid.Cols; x++)
-            {
-                if (index >= items.Count) return;
-
-                // Item'ı hücreye yerleştir
-                Item item = items[index++];
-                grid.Cells[x, y].item = item;
-                //item.transform.position = grid.Cells[x, y].transform.position;
-                StartCoroutine(ShuffleAnimation(item,item.transform.position,AnimCenter,grid.Cells[x, y].transform.position,AnimTime));
-
-                item.UpdateSortingOrder(y);
-
-            }
-        }
-    }*/
-
-    
 
     private IEnumerator ShuffleAnimation(Item item, Vector3 start, Vector2 Center, Vector3 target, float duration)
     {
@@ -343,5 +290,3 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
     }
 
 }
-
-

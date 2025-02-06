@@ -31,7 +31,10 @@ public class Cell : MonoBehaviour
                 }
             }
 
-            StartCoroutine(DestroyItems(itemsToDestroy));
+            for (int i = 0; i < itemsToDestroy.Count; i++)
+            {
+                if (itemsToDestroy[i] != null) itemsToDestroy[i].TryExecute();
+            }
 
 
         }
@@ -46,17 +49,6 @@ public class Cell : MonoBehaviour
         SmurtShuffle.Instance.LookInt();
     }
 
-    private IEnumerator DestroyItems(List<Item> items)
-    {
-        yield return new WaitForEndOfFrame(); // Küplerin düşmesini bekleyebiliriz
-
-        for (int i = 0; i < items.Count; i++)
-        {
-            if (items[i] != null) items[i].TryExecute();
-            //NewBehaviourScript.Instance.SpawnNewCubesAtTop();
-            //FallManager.Instance.ApplyGravity();               // bunlar burada mı yoksa ıtem de mi çalışsın bilemedim
-        }
-    }
 
     public Item item 
     {
