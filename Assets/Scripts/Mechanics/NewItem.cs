@@ -44,10 +44,10 @@ public class NewItem : Singleton<NewItem>
                 for(int i = 0; i < missingCubeCount; i++)
                 {
                 ItemType randomType = itemTypes[Random.Range(1, 7)];
-                //ItemType randomType = ItemType.PinkCube;//pink ile test
+
                 Item newItem = ItemFactory.Instance.CreateItem(randomType, grid.itemsParent);
 
-                var cell = grid.Cells[x,grid.Rows -1 -i]; //-i neden gelmeli?
+                var cell = grid.Cells[x,grid.Rows -1 -i];
                 cell.item = newItem;
                 
                 //anim

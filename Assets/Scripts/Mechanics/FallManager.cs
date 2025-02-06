@@ -1,66 +1,53 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class FallManager : Singleton<FallManager>
 {
-
-    /*Fall manager grid üzerinde arama yapar ve eğer altı boş olan bir cell var ise ait olduğu hücrede ki item i alt hücreye taşır*/
     public GameGrid grid;
 
     private void Start()
     {
         grid = FindObjectOfType<GameGrid>();
     }
-    
 
-    // Tüm tahtayı tarar ve düşmesi gereken şekerleri aşağıya iter.
     public void ApplyGravity()
     {
-        bool hasFallingItems; 
-
-        do
+        for (int x = 0; x < grid.Cols; x++)  // Her sütunu ayrı işle
         {
-            hasFallingItems = false;
+            Stack<Cell> emptyCells = new Stack<Cell>(); // Boş hücreleri tut
 
-            for (int y = grid.Rows - 1; y >= 0; y--) 
+            for (int y = 0; y < grid.Rows; y++) // Yukarıdan aşağıya işle
             {
-                for (int x = 0; x < grid.Cols; x++)
+                Cell currentCell = grid.GetCell(x, y);
+                if (currentCell == null) continue;
+
+                if (currentCell.item == null)
                 {
-                    Cell currentCell = grid.GetCell(x, y);
-                    Cell belowCell = grid.GetCell(x, y - 1);
-
-                    if (currentCell == null || belowCell == null) continue;
-
-                    // Eğer alttaki hücre boşsa ve üstte bir item varsa, düşme işlemi yap
-                    if (belowCell.item == null && currentCell.item != null)
-                    {
-                        MoveItemDown(currentCell, belowCell);
-                        hasFallingItems = true;
-                    }
+                    emptyCells.Push(currentCell); // Boş hücreleri stack'e ekle
+                }
+                else if (emptyCells.Count > 0) // Eğer boş hücre varsa, yukarıdan aşağı taşı
+                {
+                    Cell emptyCell = emptyCells.Pop();
+                    MoveItemDown(currentCell, emptyCell);
+                    emptyCells.Push(currentCell); // Boş hücre yukarı kaydı
                 }
             }
-        } while (hasFallingItems); // Eğer hâlâ düşecek bir şey varsa, tekrar et
-        
-        
+        }
     }
 
-
-
-    // Belirtilen itemi bir alt hücreye taşı
     private void MoveItemDown(Cell from, Cell to)
     {
         Item fallingItem = from.item;
         if (fallingItem == null) return;
 
-        from.item = null; // Eski hücreyi boşalt
-        to.item = fallingItem; // Yeni hücreye item'i yerleştir
-        fallingItem.Cell = to; // Item'in hücre bilgisini güncelle
+        from.item = null;
+        to.item = fallingItem;
+        fallingItem.Cell = to;
 
         StartCoroutine(MoveItemSmooth(fallingItem, to.transform.position));
     }
 
-
-    // Öğe yumuşak bir şekilde aşağı düşürmek için
     private IEnumerator MoveItemSmooth(Item item, Vector3 targetPosition)
     {
         float duration = 0.2f;
@@ -69,7 +56,6 @@ public class FallManager : Singleton<FallManager>
 
         while (elapsedTime < duration)
         {
-            // **Eğer nesne yok edildiyse animasyonu iptal et**
             if (item == null) yield break;
 
             item.transform.position = Vector3.Lerp(startPos, targetPosition, elapsedTime / duration);
@@ -78,9 +64,6 @@ public class FallManager : Singleton<FallManager>
         }
 
         if (item != null)
-            item.transform.position = targetPosition; // Kesin konumda bırak
+            item.transform.position = targetPosition;
     }
-
-
-
 }
