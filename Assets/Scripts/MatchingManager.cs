@@ -11,12 +11,12 @@ public class MatchingManager : MonoBehaviour
 
     public static MatchingManager Instance;
     [SerializeField] private GameGrid board; // GameGrid referansını Inspector'dan ata
-    private List<int> matchCounts; // Eşleşme boyutlarını saklayacak liste
+ 
 
     private void Awake()
     {
         Instance = this;
-        matchCounts = new List<int>();
+
     }
     public List<Cell> FindMatches(Cell startCell, MatchType matchType)
     {
@@ -44,7 +44,7 @@ public class MatchingManager : MonoBehaviour
             CheckNeighbor(currentCell.X, currentCell.Y + 1, matchType, visited, queue);
             CheckNeighbor(currentCell.X, currentCell.Y - 1, matchType, visited, queue);
         }
-        //matchCounts.
+
         return matchedCells;
     }
 

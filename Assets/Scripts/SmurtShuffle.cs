@@ -13,7 +13,7 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
 
     [SerializeField] private GameGrid grid;
     private List<int> matchCounts;
-    private bool Shuffled = false;
+    public bool Shuffled = false;
 
     private Vector2 AnimCenter = new Vector3(0,0,0);
     private float AnimTime = 0.5f;
@@ -44,10 +44,10 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
             }
         }
         
-        if(matchCounts.Count == 64 && Shuffled == false)
+        if(matchCounts.Count == 9 && Shuffled == false) // grid boyutu ile eşit olursa
         {
-            Shuffle();
             Shuffled = true;
+            Shuffle();
             Debug.Log(matchCounts.Count);
         }
         
@@ -63,29 +63,113 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
 
     public void Shuffle()
     {
-        // 1. Itemları grupla, azalt ve kalanları birleştir
+        // 1. Itemları grupla, azalt ve kalanları karıştır
         var processedItems = ProcessItemsWithReduction();
         List<List<Item>> reducedTopThree = processedItems.reducedTopThree;
-        List<Item> finalCombined = processedItems.finalCombinedRemaining;
+        List<Item> finalCombined = processedItems.finalCombinedRemaining
+                                                .OrderBy(x => Guid.NewGuid())
+                                                .ToList();
 
-        // 2. Kalanları RASTGELE KARIŞTIR!
-        finalCombined = finalCombined.OrderBy(x => Guid.NewGuid()).ToList();
+        // 2. Grid'in tüm hücrelerini boşalt
+        ClearGrid();
+        Debug.Log(reducedTopThree[0].Count);
 
-        // 2. Tüm listeleri tek bir sıralı listeye dönüştür
-        List<Item> allItems = new List<Item>();
-        
-        // Önce reducedTopThree'deki listeleri ekle (%75'lik kısımlar)
+        // 3. Rastgele başlangıç noktalarından reducedTopThree'leri dağıt
         foreach (var list in reducedTopThree)
         {
-            allItems.AddRange(list);
-        }
-        
-        // Sonra kalan tüm elemanları ekle (%25'ler + orijinal combinedRemaining)
-        allItems.AddRange(finalCombined);
+            if (list.Count == 0) continue;
 
-        // 3. Itemları grid'e yeniden dağıt
-        RedistributeItems(allItems);
+            // Rastgele başlangıç hücresi seç
+            Vector2Int startPos = GetRandomEmptyCell();
+            if (startPos.x == -1) break; // Boş hücre kalmadıysa
+
+            // BFS ile komşu hücrelere yerleştir
+            Queue<Vector2Int> queue = new Queue<Vector2Int>();
+            queue.Enqueue(startPos);
+            int itemIndex = 0;
+
+            while (queue.Count > 0 && itemIndex < list.Count)
+            {
+                Vector2Int pos = queue.Dequeue();
+                
+                // Hücre doluysa atla
+                if (grid.Cells[pos.x, pos.y].item != null) continue;
+
+                // Item'ı yerleştir
+                PlaceItem(list[itemIndex++], pos.x, pos.y);
+                
+                // Komşuları kuyruğa ekle (Sağ, Sol, Aşağı, Yukarı)
+                AddNeighborsToQueue(pos, queue);
+            }
+        }
+
+        // 4. Kalan tüm boş hücrelere finalCombined'den elemanları yerleştir
+        int remainingIndex = 0;
+        for (int y = 0; y < grid.Rows; y++)
+        {
+            for (int x = 0; x < grid.Cols; x++)
+            {
+                if (grid.Cells[x, y].item == null && remainingIndex < finalCombined.Count)
+                {
+                    PlaceItem(finalCombined[remainingIndex++], x, y);
+                }
+            }
+        }
+
         IconManager.Instance.Icon();
+    }
+
+    // Yardımcı Metotlar
+    private void ClearGrid()
+    {
+        for (int y = 0; y < grid.Rows; y++)
+        {
+            for (int x = 0; x < grid.Cols; x++)
+            {
+                grid.Cells[x, y].item = null;
+            }
+        }
+    }
+
+    private Vector2Int GetRandomEmptyCell()
+    {
+        List<Vector2Int> emptyCells = new List<Vector2Int>();
+        for (int y = 0; y < grid.Rows; y++)
+        {
+            for (int x = 0; x < grid.Cols; x++)
+            {
+                if (grid.Cells[x, y].item == null)
+                {
+                    emptyCells.Add(new Vector2Int(x, y));
+                }
+            }
+        }
+        return emptyCells.Count > 0 ? emptyCells[UnityEngine.Random.Range(0, emptyCells.Count)] : new Vector2Int(-1, -1);
+    }
+
+    private void AddNeighborsToQueue(Vector2Int pos, Queue<Vector2Int> queue)
+    {
+        // Sağ
+        if (pos.x + 1 < grid.Cols) queue.Enqueue(new Vector2Int(pos.x + 1, pos.y));
+        // Sol
+        if (pos.x - 1 >= 0) queue.Enqueue(new Vector2Int(pos.x - 1, pos.y));
+        // Yukarı
+        if (pos.y + 1 < grid.Rows) queue.Enqueue(new Vector2Int(pos.x, pos.y + 1));
+        // Aşağı
+        if (pos.y - 1 >= 0) queue.Enqueue(new Vector2Int(pos.x, pos.y - 1));
+    }
+
+    private void PlaceItem(Item item, int x, int y)
+    {
+        grid.Cells[x, y].item = item;
+        StartCoroutine(ShuffleAnimation(
+            item, 
+            item.transform.position, 
+            AnimCenter, 
+            grid.Cells[x, y].transform.position, 
+            AnimTime
+        ));
+        item.UpdateSortingOrder(y);
     }
 
 
@@ -112,8 +196,6 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
 /// <summary>
 /// 
 /// </summary>
-
-
 
 
 
@@ -190,7 +272,7 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
         foreach (var list in topThreeLists)
         {
             int totalItems = list.Count;
-            int seventyFiveCount = (int)(totalItems * 0.75); // %75'ini hesapla
+            int seventyFiveCount = (int)(totalItems * 1); // %75'ini hesapla
 
             List<Item> seventyFiveList = list.Take(seventyFiveCount).ToList();
             List<Item> twentyFiveList = list.Skip(seventyFiveCount).ToList();
@@ -218,7 +300,7 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
 
 
 
-    private void RedistributeItems(List<Item> items)
+    /*private void RedistributeItems(List<Item> items)
     {
         int index = 0;
         for (int y = 0; y < grid.Rows; y++)
@@ -235,15 +317,17 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
 
                 item.UpdateSortingOrder(y);
 
-                
             }
         }
-    }
+    }*/
+
+    
 
     private IEnumerator ShuffleAnimation(Item item, Vector3 start, Vector2 Center, Vector3 target, float duration)
     {
         yield return StartCoroutine(MoveItemToPosition(item, start, Center, duration));
         yield return StartCoroutine(MoveItemToPosition(item, Center, target, duration));
+        Shuffled = false;
     }
     
     private IEnumerator MoveItemToPosition(Item item, Vector3 start, Vector3 target, float duration)
