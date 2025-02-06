@@ -6,8 +6,7 @@ public class ItemFactory : Singleton<ItemFactory>
 {
     public ItemPrefab ItemPrefab;
 
-
-    //Factory design pattern ile farklı item çeşitleri oluşturmak için
+    //Factory design pattern ile ItemType a göre farklı item çeşitleri oluşturulur.
     private Dictionary<ItemType, Func<ItemPrefab, Item>> itemCreators = new Dictionary<ItemType, Func<ItemPrefab, Item>>
     {
         { ItemType.GreenCube, (itemprefab) => CreateCubeItem(itemprefab, MatchType.Green) },

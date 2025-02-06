@@ -49,9 +49,8 @@ public class NewItem : Singleton<NewItem>
 
                 var cell = grid.Cells[x,grid.Rows -1 -i]; //-i neden gelmeli?
                 cell.item = newItem;
-                //newItem.transform.position = cell.transform.position;
-
-
+                
+                //anim
                 Vector2 startPos = cell.transform.position + new Vector3(0, 5); //Ne kadar yukarıdan düşsün
                 Vector2 targetPos = newItem.Cell.transform.position; // asıl cell noktasını belirle
 

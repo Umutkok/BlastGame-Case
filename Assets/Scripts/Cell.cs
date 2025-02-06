@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class Cell : MonoBehaviour
 {
-    public TextMesh labelText;
+    //Cell içinde item tutar ve eğer yeni bir item gelirse eskisi ile değiştirir
+    //collision ekli olduğu için OnMouseDown ile ınput alınır. Oyunda tek tür item olduğu için Input System kullanmadım
 
     [HideInInspector] public int X;
     [HideInInspector] public int Y;
@@ -13,9 +14,10 @@ public class Cell : MonoBehaviour
     public Item _item;
     public GameGrid gameGrid { get; private set; }
 
+
     private void OnMouseDown()
     {
-        if (item == null || item.GetMatchType() == MatchType.None) return;
+        if (item == null || item.GetMatchType() == MatchType.None || SmurtShuffle.Instance.shuffling ==true) return; //shuffle halinde ise veya null ise return
 
         var matchedCells = MatchingManager.Instance.FindMatches(this, item.GetMatchType());
 

@@ -5,10 +5,10 @@ using UnityEngine;
 public class Item : MonoBehaviour
 {
     public ItemType ItemType;
-    public ParticleSystem Particle;
     private Cell cell;
     private MatchType matchType;
     public SpriteRenderer SpriteRenderer;
+    public float SpriteSize = 0.44f;
 
     public Cell Cell
     {
@@ -26,7 +26,6 @@ public class Item : MonoBehaviour
             if(value != null)
             {
                 value.item = this;
-                gameObject.name = cell.gameObject.name + " " + GetType().Name;
             }
         }
     }
@@ -37,9 +36,6 @@ public class Item : MonoBehaviour
         ItemType = ItemPrefab.ItemType;
     }
 
-    private const int BaseSortingOrder = 10;
-    public static int childSpriteOrder;
-    
     public SpriteRenderer AddSprite(Sprite sprite)
     {
         var spriteRenderer = new GameObject("Sprite_" + childSpriteOrder).AddComponent<SpriteRenderer>();
@@ -47,14 +43,15 @@ public class Item : MonoBehaviour
 
         spriteRenderer.transform.SetParent(transform);
         spriteRenderer.transform.localPosition = Vector3.zero;
-        spriteRenderer.transform.localScale = new Vector2(0.44f, 0.44f);
+        spriteRenderer.transform.localScale = new Vector2(SpriteSize, SpriteSize);
         spriteRenderer.sprite = sprite;
         spriteRenderer.sortingLayerID = SortingLayer.NameToID("Cell");
         spriteRenderer.sortingOrder = BaseSortingOrder + childSpriteOrder++;
 
         return spriteRenderer;
     }
-
+    private const int BaseSortingOrder = 10;
+    public static int childSpriteOrder;
     public void UpdateSortingOrder(int cellY)
     {
         if (SpriteRenderer == null) return;
@@ -65,7 +62,7 @@ public class Item : MonoBehaviour
     {
         Cell.item = null;
         Cell = null;
-        Destroy(gameObject); //object pooling gerekli
+        Destroy(gameObject); //object pooling eklenebir
         
         // Şekerler patladığında tahtada değişiklik olduğunu bildir
         FallManager.Instance.ApplyGravity();

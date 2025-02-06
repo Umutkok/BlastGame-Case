@@ -205,7 +205,8 @@ MonoBehaviour:
   cellsParent: {fileID: 358696744}
   itemsParent: {fileID: 1282973612}
   cellPrefab: {fileID: -521506302864909643, guid: 9db7e18ea2469584389a5efc9fa7c701, type: 3}
-  levelInfo: {fileID: 0}
+  levelSO: {fileID: 11400000, guid: 49b5cf9856ac0d147ad81ae79f9adc7d, type: 2}
+  Center: {x: 0, y: 0, z: 0}
 --- !u!4 &285759515
 Transform:
   m_ObjectHideFlags: 0
@@ -271,7 +272,7 @@ GameObject:
   - component: {fileID: 435605500}
   - component: {fileID: 435605501}
   m_Layer: 0
-  m_Name: Managers
+  m_Name: CodeBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -321,12 +322,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 435605493}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.50074756, y: 0.11562076, z: 0.031863585}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.03, y: -0.01, z: 0.031863585}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 561830630}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &435605496
 MonoBehaviour:
@@ -409,7 +410,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grid: {fileID: 285759514}
-  Shuffled: 0
+  shuffling: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,6 +547,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 285759515}
+  - {fileID: 435605495}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &851197332
@@ -834,6 +836,5 @@ SceneRoots:
   m_Roots:
   - {fileID: 519420032}
   - {fileID: 561830630}
-  - {fileID: 435605495}
   - {fileID: 1800653693}
   - {fileID: 851197335}

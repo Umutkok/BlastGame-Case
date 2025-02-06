@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class IconManager : Singleton<IconManager>
 {
+    //IconManager matching managerdan aldığı groupSize bilgisi ile item conditionlarını ayarlar
+        
     [SerializeField] private GameGrid board;
     [SerializeField] private int conditionA = 4, conditionB = 6, conditionC = 8;
 
@@ -28,7 +30,7 @@ public class IconManager : Singleton<IconManager>
         }
     }
 
-
+    //Matching manager ile komşuları bulup ıcon update condition nına göre ayarla
     public void Icon()
     {
         ResetAllIconsToDefault();
@@ -42,7 +44,7 @@ public class IconManager : Singleton<IconManager>
                 
                 if(cell.item == null || visitedCells.Contains(cell)) continue;
                 var matchedCells = MatchingManager.Instance.FindMatches(cell, cell.item.GetMatchType());
-                int groupSize = matchedCells.Count;
+                int groupSize = matchedCells.Count; //grup büyüklüğü Matching manager ile ayarlansın
                 visitedCells.AddRange(matchedCells);
 
                 foreach (var matchedCell in matchedCells)
@@ -61,21 +63,6 @@ public class IconManager : Singleton<IconManager>
 
     private void UpdateItemVisuals(Item item, int groupSize)
     {
-        // Particle kontrolü
-
-       /* if (groupSize > conditionC && item.GetMatchType() == MatchType.Special)
-        {
-            if (item.Particle == null)
-            {
-                var particle = ParticleManager.Instance.ComboHintParticle;
-                item.Particle = Instantiate(particle, item.transform);
-            }
-        }
-        else if (item.Particle != null)
-        {
-            Destroy(item.Particle.gameObject);
-        }*/
-
         // Icon güncelleme
         if (groupSize > conditionC)
         {
@@ -91,8 +78,7 @@ public class IconManager : Singleton<IconManager>
         }
     }
 
-
-
+    //eğer komşusu yoksa static yap
     private void SetStatic(Item item, int groupSize)
     {
         if(groupSize == 1)

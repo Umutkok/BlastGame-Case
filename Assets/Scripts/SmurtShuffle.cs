@@ -18,7 +18,7 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
 
     [SerializeField] private GameGrid grid;
     private List<int> matchCounts;
-    public bool Shuffled = false;
+    public bool shuffling = false;
 
     private Vector2 AnimCenter = new Vector3(0,0,0);
     private float AnimTime = 0.2f;
@@ -49,9 +49,9 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
             }
         }
         
-        if(matchCounts.Count == grid.Rows*grid.Cols && Shuffled == false) // grid boyutu ile eşit olursa
+        if(matchCounts.Count == grid.Rows*grid.Cols && shuffling == false) // grid boyutu ile eşit olursa
         {
-            Shuffled = true;
+            shuffling = true;
             Shuffle();
             Debug.Log(matchCounts.Count);
         }
@@ -84,7 +84,7 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
         {
             if (list.Count == 0) continue;
 
-            // Rastgele başlangıç hücresi seç
+            // Rastgele başlangıç hücresi
             Vector2Int startPos = GetRandomEmptyCell();
             if (startPos.x == -1) break; // Boş hücre kalmadıysa
 
@@ -103,7 +103,7 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
                 // Item'ı yerleştir
                 PlaceItem(list[itemIndex++], pos.x, pos.y);
                 
-                // Komşuları kuyruğa ekle (Sağ, Sol, Aşağı, Yukarı)
+                // Komşuları kuyruğa ekle
                 AddNeighborsToQueue(pos, queue);
             }
         }
@@ -124,7 +124,7 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
         IconManager.Instance.Icon();
     }
 
-    // Yardımcı Metotlar
+    
     private void ClearGrid()
     {
         for (int y = 0; y < grid.Rows; y++)
@@ -135,7 +135,7 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
             }
         }
     }
-
+    //reducedTopThree için rondom cell seçiyoruz seçilen noktadan başlayarak komşulara dağılacak
     private Vector2Int GetRandomEmptyCell()
     {
         List<Vector2Int> emptyCells = new List<Vector2Int>();
@@ -151,7 +151,7 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
         }
         return emptyCells.Count > 0 ? emptyCells[UnityEngine.Random.Range(0, emptyCells.Count)] : new Vector2Int(-1, -1);
     }
-
+    
     private void AddNeighborsToQueue(Vector2Int pos, Queue<Vector2Int> queue)
     {
         // Sağ
@@ -251,7 +251,12 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
         foreach (var list in topThreeLists)
         {
             int totalItems = list.Count;
-            int seventyFiveCount = (int)(totalItems * 1); // %75'ini hesapla
+            float listPercent;
+
+            if(list.Count <4 )listPercent = 1; //eğer komşu sayısı 4 den az ise listeyi bölme
+            else listPercent = 0.75f;   //eğer 4den fazla ise yüzde 75 ini al
+
+            int seventyFiveCount = (int)(totalItems * listPercent); // yüzde hesapla
 
             List<Item> seventyFiveList = list.Take(seventyFiveCount).ToList();
             List<Item> twentyFiveList = list.Skip(seventyFiveCount).ToList();
@@ -269,12 +274,12 @@ public class SmurtShuffle : Singleton<SmurtShuffle>
     }
 
 
-
+    //SmurtShuffle animasyounu için önce merkeze ardından yeni pozisyonunlara Coroutine ile götür
     private IEnumerator ShuffleAnimation(Item item, Vector3 start, Vector2 Center, Vector3 target, float duration)
     {
         yield return StartCoroutine(MoveItemToPosition(item, start, Center, duration));
         yield return StartCoroutine(MoveItemToPosition(item, Center, target, duration));
-        Shuffled = false;
+        shuffling = false;
     }
     
     private IEnumerator MoveItemToPosition(Item item, Vector3 start, Vector3 target, float duration)
