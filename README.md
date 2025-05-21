@@ -1,3 +1,3 @@
-# BlastGame-Case
+# Blast-Game-Case
  
 GJG case
