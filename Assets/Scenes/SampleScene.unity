@@ -206,7 +206,6 @@ MonoBehaviour:
   itemsParent: {fileID: 1282973612}
   cellPrefab: {fileID: -521506302864909643, guid: 9db7e18ea2469584389a5efc9fa7c701, type: 3}
   levelSO: {fileID: 11400000, guid: 49b5cf9856ac0d147ad81ae79f9adc7d, type: 2}
-  Center: {x: 0, y: 0, z: 0}
 --- !u!4 &285759515
 Transform:
   m_ObjectHideFlags: 0
@@ -827,7 +826,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 22.253716, y: 3.3804}
+  m_AnchoredPosition: {x: 22.253716, y: 1059}
   m_SizeDelta: {x: 607.4824, y: 72.9848}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1660057539 &9223372036854775807
